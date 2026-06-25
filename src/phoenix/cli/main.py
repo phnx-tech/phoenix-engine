@@ -723,3 +723,9 @@ def _format_pretty(data: dict[str, object]) -> str:
     with console.capture() as capture:
         console.print_json(data=data)
     return capture.get()
+
+
+# Register additional CLI commands. These imports intentionally happen after the
+# Typer app is created so the decorators can attach to it.
+import phoenix.cli.chat  # noqa: E402
+import phoenix.cli.setup  # noqa: E402, F401

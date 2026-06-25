@@ -54,6 +54,38 @@ license_key: "phx.eyJ..."
 If the key is missing, expired, tampered with, or over its use limit, the
 engine will refuse to start.
 
+## First-time setup
+
+After installing, run the built-in setup checker:
+
+```bash
+phoenix setup
+```
+
+It will verify:
+
+- Python version (3.11 or newer).
+- Playwright browsers (`chromium`). If missing, it can install them for you.
+- Ollama is reachable (only needed for AI-assisted extraction).
+- Your license key is valid.
+
+Manual install commands if you prefer:
+
+```bash
+# Install Playwright Chromium browser
+python -m playwright install chromium
+
+# Install Ollama for AI features
+# https://ollama.com/download
+ollama pull qwen2.5:7b
+```
+
+You can also chat with the local AI assistant:
+
+```bash
+phoenix chat
+```
+
 ## Quick start — CLI
 
 ```bash
@@ -123,6 +155,43 @@ Phoenix Engine only scrapes **publicly available** content. Always respect:
 - The target site's `robots.txt` and Terms of Service.
 - Local laws and data-protection regulations (GDPR, CCPA, etc.).
 - Rate limits — the engine includes built-in throttling to avoid overload.
+
+## Frequently Asked Questions
+
+**Q: Do I need an API key from Instagram/Facebook/etc.?**  
+A: No. Phoenix Engine extracts data from public HTML pages, so no official
+platform API keys are required.
+
+**Q: What do I need installed on my machine?**  
+A: Python 3.11+, the `phoenix-engine` package, and Playwright browsers
+(`python -m playwright install chromium`). AI features also need a local
+Ollama server.
+
+**Q: How do I get a license key?**  
+A: Contact the Phoenix Engine team. During beta, keys are issued manually and
+can include expiration dates and usage limits.
+
+**Q: Can I use it without the AI features?**  
+A: Yes. AI is optional. Traditional selector-based extraction works out of the
+box.
+
+**Q: Why did the engine fail with a license error?**  
+A: Either the key is missing, expired, the signature does not match, or the
+maximum number of uses has been reached. Run `phoenix license status` to check.
+
+**Q: How do I add support for a new website?**  
+A: Use PhoenixArchitect:
+
+```bash
+phoenix architect generate --url "https://example.com"
+```
+
+## Get a license key
+
+Phoenix Engine is currently in closed beta and requires a license key.
+
+To request a key, contact: **your-email@example.com** (replace with your
+contact info).
 
 ## Support
 
