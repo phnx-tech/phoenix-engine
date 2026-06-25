@@ -190,8 +190,7 @@ phoenix architect generate --url "https://example.com"
 
 Phoenix Engine is currently in closed beta and requires a license key.
 
-To request a key, contact: **your-email@example.com** (replace with your
-contact info).
+To request a key, contact: **contact@phoenix-mea.com**.
 
 ## Support
 
