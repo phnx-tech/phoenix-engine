@@ -20,6 +20,7 @@ from phoenix.processing.normalizer import Normalizer
 from phoenix.processing.phoenix_ai_extractor import PhoenixAIExtractor
 from phoenix.router import URLRouter
 from phoenix.strategy_selector import StrategySelector
+from phoenix.version import __version__
 
 if TYPE_CHECKING:
     from phoenix.infrastructure.rate_limiter import RateLimiter
@@ -39,7 +40,7 @@ class PhoenixEngine:
             print(result.output)
     """
 
-    version: str = "0.1.3"
+    version: str = __version__
 
     def __init__(  # noqa: PLR0913
         self,

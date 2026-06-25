@@ -9,7 +9,7 @@ import pytest
 if TYPE_CHECKING:
     from pathlib import Path
 
-from phoenix import PhoenixEngine
+from phoenix import PhoenixEngine, __version__
 from phoenix.collectors.base import StubCollector
 from phoenix.exceptions import LicenseMissingError
 from phoenix.models import Config
@@ -81,7 +81,7 @@ async def test_engine_scrape_batch_empty_urls_raises() -> None:
 async def test_engine_async_context_manager() -> None:
     """The engine supports async context manager usage."""
     async with PhoenixEngine() as engine:
-        assert engine.version == "0.1.3"
+        assert engine.version == __version__
 
 
 def test_engine_builds_ai_assistant_when_enabled() -> None:
