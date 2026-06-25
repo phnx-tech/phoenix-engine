@@ -1,117 +1,82 @@
 # Phoenix Engine
 
-Universal pure web scraping engine. Extracts structured data from public web
-pages and social media platforms using raw HTML parsing and headless browser
-automation. Phoenix Engine never uses official platform APIs.
+A universal pure-web scraping engine that turns public web pages into structured,
+predictable data. No official APIs required — Phoenix Engine uses raw HTTP
+requests and headless browser automation to extract posts, profiles, listings,
+and articles from social platforms and websites.
 
-## Features
+> **Current status:** beta / early access. A license key is required to run the
+> engine in production.
 
-- Pure web scraping via HTTP (`httpx`) and headless browser (`playwright`).
-- CSS/XPath selector engine with fallback chains.
-- Unified output schema across all platforms.
-- Plugin-based platform scraper architecture.
-- Ethical-by-default: transparent user-agent, rate limiting, audit logging.
+## What it does
+
+- Scrapes public pages using **HTTP** or **headless browser** strategies.
+- Returns a **unified JSON output** no matter what platform you target.
+- Automatically adapts to site changes, anti-bot measures, and selector drift.
+- Learns from past scrapes to pick the best strategy for each domain.
+- Can be used from the command line or inside your Python application.
 
 ## Install
 
-### From PyPI (recommended for clients)
+### From PyPI
 
 ```bash
 pip install phoenix-engine
 ```
 
-> You must also set a license key before the engine will start. See
-> [Client license setup](#client-license-setup) below.
-
 ### From a GitHub Release wheel
 
+Download the `.whl` from the latest release, then:
+
 ```bash
-# Download the .whl from the latest release, then:
 pip install phoenix_engine-0.1.0-py3-none-any.whl
 ```
 
-### From source
+## Activate your license
+
+Phoenix Engine is distributed under license keys during beta. After installing,
+set your key:
 
 ```bash
-git clone https://github.com/phnx-tech/phoenix-engine.git
-cd phoenix-engine
-pip install -e ".[dev]"
+export PHOENIX_LICENSE_ENFORCEMENT_ENABLED=true
+export PHOENIX_LICENSE_SECRET="your-signing-secret"
+export PHOENIX_LICENSE_KEY="phx.eyJ..."
 ```
 
-## Client license setup
+Or create a `phoenix.yaml` file:
 
-Phoenix Engine supports offline HMAC-signed license keys. To distribute to a
-client:
+```yaml
+license_enforcement_enabled: true
+license_secret: "your-signing-secret"
+license_key: "phx.eyJ..."
+```
 
-1. Generate a key (on your machine, using your private signing secret):
+If the key is missing, expired, tampered with, or over its use limit, the
+engine will refuse to start.
 
-   ```bash
-   export PHOENIX_LICENSE_SECRET="your-private-secret"
-   phoenix license generate --expires 2026-07-31 --max-uses 100 --note "Client A"
-   ```
-
-2. Give the client the generated `phx.eyJ...` key and set these in their
-   environment or config file:
-
-   ```bash
-   PHOENIX_LICENSE_ENFORCEMENT_ENABLED=true
-   PHOENIX_LICENSE_SECRET="your-private-secret"
-   PHOENIX_LICENSE_KEY="phx.eyJ..."
-   ```
-
-   Or in `phoenix.yaml`:
-
-   ```yaml
-   license_enforcement_enabled: true
-   license_secret: "your-private-secret"
-   license_key: "phx.eyJ..."
-   ```
-
-The engine will refuse to start if the key is missing, expired, tampered with,
-or used up.
-
-## Usage
-
-### CLI
+## Quick start — CLI
 
 ```bash
-# Show version
-python -m phoenix --version
-phoenix --version
-
-# Show help
-phoenix --help
-
-# Scrape a single URL
+# Scrape a single public page
 phoenix scrape "https://example.com/post/123"
 
 # Scrape without archiving the raw source
 phoenix scrape "https://example.com/post/123" --no-archive
 
-# Scrape with Phoenix AI fallback extraction (requires local Ollama)
-phoenix scrape "https://example.com/post/123" --ai
-
-# Scrape multiple URLs concurrently
+# Scrape multiple URLs in parallel
 phoenix scrape-batch \
   "https://example.com/post/123" \
   "https://example.com/post/456" \
   --output results.json
 
-# List installed scraper plugins
+# List built-in platform adapters
 phoenix plugins list
 
-# Inspect effective configuration (API key masked by default)
+# Inspect effective configuration (secrets are masked)
 phoenix config show
-
-# Use a custom configuration file
-phoenix --config phoenix.yaml scrape "https://example.com/post/123"
 ```
 
-> **Phoenix AI model:** The default local model is `qwen2.5:7b`. Make sure
-> you have pulled it in Ollama (`ollama pull qwen2.5:7b`) before using
-> `--ai`. You can override it with `PHOENIX_AI_MODEL` or in a config file.
-
-### Library
+## Quick start — Python library
 
 ```python
 import asyncio
@@ -120,47 +85,50 @@ from phoenix import PhoenixEngine
 async def main() -> None:
     async with PhoenixEngine() as engine:
         result = await engine.scrape("https://example.com/post/123")
-        print(result)
+        print(result.output.model_dump_json(indent=2))
 
 asyncio.run(main())
 ```
 
-## Development
+## Configuration
 
-```bash
-# Formatting and linting
-black src/ tests/
-ruff check src/ tests/
-mypy src/phoenix
+Most settings can be controlled with environment variables or a config file
+(`phoenix.yaml`, `phoenix.json`, `phoenix.toml`):
 
-# Tests
-pytest tests/
-
-# Pre-commit hooks
-pre-commit install
-pre-commit run --all-files
+```yaml
+timeout: 30
+stealth_enabled: true
+ai_enabled: false
+rate_limits:
+  example.com: 1.0
 ```
 
-## Build and release
+Run `phoenix config show` to see the active configuration.
 
-```bash
-# Build wheel + sdist
-python -m build
+## Supported platforms
 
-# Tag a release (triggers the GitHub release workflow)
-git tag v0.1.0
-git push origin v0.1.0
-```
+Phoenix Engine ships with adapters for common public platforms and a generic
+fallback for any HTML page:
 
-The `Release` workflow uploads the wheel/sdist to GitHub Releases. If you have
-configured a PyPI trusted publisher for the `pypi` environment, the
-`Publish to PyPI` workflow will also publish the package when the release is
-published.
+- Instagram, Facebook, X/Twitter, LinkedIn, TikTok, YouTube
+- Generic blogs, listings, and article pages
 
-## Architecture Decision Records
+Adapters are plugin-based, so new platforms can be added without touching the
+core engine.
 
-See [docs/architecture/decisions/](docs/architecture/decisions/).
+## Ethical use
+
+Phoenix Engine only scrapes **publicly available** content. Always respect:
+
+- The target site's `robots.txt` and Terms of Service.
+- Local laws and data-protection regulations (GDPR, CCPA, etc.).
+- Rate limits — the engine includes built-in throttling to avoid overload.
+
+## Support
+
+- Issues: https://github.com/phnx-tech/phoenix-engine/issues
+- Repository: https://github.com/phnx-tech/phoenix-engine
 
 ## License
 
-MIT
+Commercial beta license. See your license agreement for terms.

@@ -50,3 +50,12 @@ migrations/
 # OS
 .DS_Store
 Thumbs.db
+
+# Internal project planning docs (keep local, do not publish)
+0*-*.md
+0*-*.docx
+1*-*.md
+1*-*.docx
+master-index.*
+plan.md
+ollama-recommendation.md
