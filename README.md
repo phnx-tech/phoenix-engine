@@ -32,6 +32,19 @@ Download the `.whl` from the latest release, then:
 pip install phoenix_engine-0.1.3-py3-none-any.whl
 ```
 
+### With Docker
+
+A ready-to-use Docker image is available from the repository. It includes the
+engine and the Chromium browser, so no local Playwright install is needed.
+
+```bash
+# Build the image
+docker build -t phoenix-engine .
+
+# Run with a mounted config file
+docker run --rm -v "$(pwd)/phoenix.yaml:/app/phoenix.yaml" phoenix-engine scrape "https://example.com/post/123"
+```
+
 ## Activate your license
 
 Phoenix Engine is distributed under license keys during beta. After installing,
