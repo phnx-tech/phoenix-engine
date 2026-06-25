@@ -1,0 +1,184 @@
+[build-system]
+requires = ["setuptools>=61.0", "wheel"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "phoenix-engine"
+version = "0.1.0"
+description = "Universal pure web scraping engine."
+readme = "README.md"
+requires-python = ">=3.11"
+license = "MIT"
+authors = [
+    { name = "Phoenix Engine Team" },
+]
+keywords = ["scraping", "web", "social-media", "html", "automation"]
+classifiers = [
+    "Development Status :: 3 - Alpha",
+    "Intended Audience :: Developers",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Programming Language :: Python :: 3.13",
+    "Topic :: Internet :: WWW/HTTP",
+    "Topic :: Software Development :: Libraries :: Python Modules",
+]
+dependencies = [
+    "httpx>=0.27.0",
+    "playwright>=1.40.0",
+    "beautifulsoup4>=4.12.0",
+    "lxml>=5.0.0",
+    "cssselect>=1.2.0",
+    "pydantic>=2.0.0",
+    "pydantic-settings>=2.0.0",
+    "typer>=0.12.0",
+    "sqlalchemy>=2.0.0",
+    "alembic>=1.13.0",
+    "keyring>=24.0.0",
+    "cryptography>=42.0.0",
+    "structlog>=24.0.0",
+    "openai>=1.0.0",
+    "duckduckgo-search>=8.0.0",
+    "pyyaml>=6.0",
+]
+
+[project.optional-dependencies]
+dev = [
+    "build>=1.0.0",
+    "pytest>=8.0.0",
+    "pytest-asyncio>=0.23.0",
+    "pytest-cov>=5.0.0",
+    "respx>=0.21.0",
+    "pytest-playwright>=0.5.0",
+    "black>=24.0.0",
+    "ruff>=0.4.0",
+    "mypy>=1.10.0",
+    "pre-commit>=3.7.0",
+    "faker>=25.0.0",
+    "factory-boy>=3.3.0",
+    "mkdocs>=1.6.0",
+    "mkdocs-material>=9.5.0",
+]
+
+[project.scripts]
+phoenix = "phoenix.cli.main:app"
+
+[project.urls]
+Homepage = "https://github.com/phnx-tech/phoenix-engine"
+Documentation = "https://github.com/phnx-tech/phoenix-engine#readme"
+Repository = "https://github.com/phnx-tech/phoenix-engine.git"
+Issues = "https://github.com/phnx-tech/phoenix-engine/issues"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.black]
+line-length = 100
+target-version = ["py311", "py312", "py313"]
+include = "\\.pyi?$"
+extend-exclude = """
+/(
+    migrations
+  | archive
+  | \\.venv
+)/
+"""
+
+[tool.ruff]
+target-version = "py311"
+line-length = 100
+
+[tool.ruff.lint]
+select = ["ALL"]
+ignore = [
+    "D105",
+    "D107",
+    "CPY001",
+    "TD003",
+    "FIX002",
+    "FBT003",
+    "ERA001",
+    "EM101",
+    "EM102",
+    "TRY003",
+    "D407",
+    "D413",
+]
+
+[tool.ruff.lint.pydocstyle]
+convention = "google"
+
+[tool.ruff.lint.mccabe]
+max-complexity = 12
+
+[tool.ruff.lint.per-file-ignores]
+"tests/*" = [
+    "S101",
+    "D100",
+    "D103",
+    "SLF001",
+    "ARG001",
+    "PLR2004",
+    "PLC0415",
+]
+"tests/fixtures/*" = ["ALL"]
+"*/__init__.py" = ["D104"]
+"src/phoenix/adapters/generated/*.py" = ["ALL"]
+"src/phoenix/cli/main.py" = ["ARG001", "B008", "FBT001", "PLR0913", "TC003"]
+"src/phoenix/pipeline.py" = ["ANN401", "BLE001", "S112"]
+"src/phoenix/adapters/base.py" = ["F401", "RUF001", "TC001", "UP035"]
+"src/phoenix/adapters/generic.py" = ["ARG002"]
+"src/phoenix/router.py" = ["PLC0415"]
+"src/phoenix/plugins/loader.py" = ["ANN401", "PLC0415", "TC003", "TRY004", "TRY300"]
+"src/phoenix/plugins/registry.py" = ["PYI034", "SLF001", "TC003"]
+"tests/unit/test_plugin_loader.py" = ["ANN401", "ARG002", "D102", "PLW0108", "Q001", "TC001", "W605"]
+"tests/unit/test_plugin_interface.py" = ["ANN401", "ARG002", "D102"]
+
+[tool.mypy]
+python_version = "3.11"
+strict = true
+warn_return_any = true
+warn_unused_ignores = true
+warn_unreachable = true
+disallow_untyped_defs = true
+disallow_incomplete_defs = true
+check_untyped_defs = true
+no_implicit_optional = true
+warn_redundant_casts = true
+warn_unused_configs = true
+show_error_codes = true
+
+[tool.pytest.ini_options]
+asyncio_mode = "auto"
+testpaths = ["tests"]
+markers = [
+    "integration: marks tests as integration tests",
+]
+addopts = "-ra"
+
+[tool.coverage.run]
+source = ["phoenix"]
+branch = true
+
+[tool.coverage.report]
+fail_under = 85
+skip_covered = false
+show_missing = true
+include = [
+    "src/phoenix/adapters/*.py",
+    "src/phoenix/collectors/*",
+    "src/phoenix/infrastructure/*.py",
+    "src/phoenix/models/*",
+    "src/phoenix/options.py",
+    "src/phoenix/exceptions.py",
+    "src/phoenix/plugins/*.py",
+    "src/phoenix/router.py",
+    "src/phoenix/version.py",
+    "src/phoenix/processing/ai_assistant.py",
+    "src/phoenix/processing/archiver.py",
+    "src/phoenix/processing/phoenix_ai_extractor.py",
+    "src/phoenix/intelligence/*.py",
+    "src/phoenix/pipeline.py",
+    "src/phoenix/engine.py",
+    "src/phoenix/scrapers/*.py",
+]
