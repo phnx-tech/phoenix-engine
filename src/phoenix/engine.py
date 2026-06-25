@@ -39,7 +39,7 @@ class PhoenixEngine:
             print(result.output)
     """
 
-    version: str = "0.1.0"
+    version: str = "0.1.3"
 
     def __init__(  # noqa: PLR0913
         self,

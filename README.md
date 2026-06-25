@@ -29,7 +29,7 @@ pip install phoenix-engine
 Download the `.whl` from the latest release, then:
 
 ```bash
-pip install phoenix_engine-0.1.0-py3-none-any.whl
+pip install phoenix_engine-0.1.3-py3-none-any.whl
 ```
 
 ## Activate your license
